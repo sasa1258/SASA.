@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Special Celebration with Yasmin!</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700&display=swap" rel="stylesheet">
+    <style>
+        /* إعدادات الخطوط */
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background: linear-gradient(135deg, #f85e5e, #f0ab00);
+            color: white;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            text-align: center;
+            overflow: hidden;
+        }
+
+        .container {
+            width: 80%;
+            max-width: 900px;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
+            position: relative;
+            z-index: 2; /* جعل النص أمام الألعاب النارية */
+        }
+
+        h1 {
+            font-size: 3.8rem;
+            color: #ffdb58;
+            margin-top: 20px;
+            text-shadow: 4px 4px 8px rgba(0, 0, 0, 0.6);
+            letter-spacing: 2px;
+            animation: fadeIn 2s ease-in-out;
+        }
+
+        .message {
+            font-size: 1.6rem;
+            margin: 20px 0;
+            color: #fff;
+            line-height: 1.6;
+            animation: slideUp 1s ease-in-out;
+            max-width: 800px;
+            margin: 20px auto;
+        }
+
+        .balloons {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 30px;
+            animation: fadeInBalloons 2s ease-in-out;
+        }
+
+        .balloons img {
+            width: 120px;
+            height: 180px;
+            animation: moveBalloons 5s ease-in-out infinite;
+        }
+
+        .footer {
+            margin-top: 50px;
+            font-size: 1.3rem;
+            color: #ffec64;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            animation: fadeInFooter 2s ease-in-out;
+        }
+
+        /* زر Wassa3 */
+        .play-button {
+            position: fixed;
+            right: 30px;
+            bottom: 30px;
+            background-color: #ffdb58;
+            color: #fff;
+            padding: 15px 30px;
+            font-size: 1.5rem;
+            border-radius: 30px;
+            border: none;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+            cursor: pointer;
+            transition: background-color 0.3s;
+            z-index: 3;
+        }
+
+        .play-button:hover {
+            background-color: #f85e5e;
+        }
+
+        @keyframes fadeIn {
+            0% { opacity: 0; transform: translateY(30px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes slideUp {
+            0% { opacity: 0; transform: translateY(20px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes fadeInBalloons {
+            0% { opacity: 0; transform: translateY(50px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes moveBalloons {
+            0% { transform: translateY(0); }
+            50% { transform: translateY(-30px); }
+            100% { transform: translateY(0); }
+        }
+
+        @keyframes fadeInFooter {
+            0% { opacity: 0; }
+            100% { opacity: 1; }
+        }
+
+        audio {
+            display: none;
+        }
+
+        #hanabi {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1; /* جعل الألعاب النارية خلف النص */
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Happy Birthday my friend!</h1>
+        <div class="message">
+            <p>Happy birthday, my friend! Kol sana w enty tayeba w 3omrek koloh farah w sa3ada. You’re a wonderful person, and I wish you all the success and happiness in life. May your day be as special as you are. 🎂🎉</p>
+        </div>
+
+        <div class="balloons">
+            <img src="images/download.jpg.png" alt="Balloon 1">
+            <img src="images/download.jpg.png" alt="Balloon 2">
+            <img src="images/download.jpg.png" alt="Balloon 3">
+        </div>
+
+        <div class="footer">
+            <p>The celebration continues! 🎉3o2bal million sana ya yaaso ❤️</p>
+        </div>
+    </div>
+
+    <audio id="audio-player" autoplay loop>
+        <source src="song.mp3.mp3" type="audio/mp3">
+        Your browser does not support the audio element.
+    </audio>
+    
+    </audio>
+
+    <button class="play-button" onclick="toggleAudio()">Wassa3</button>
+
+    <canvas id="hanabi"></canvas>
+
+    <script>
+        function shower() {
+            Math.Radian = Math.PI * 2;
+            var sparkCount = 300,  // زيادة عدد الألعاب النارية
+                sparkSpeed = 6,    // زيادة سرعة الألعاب النارية
+                sparkTop = 0,
+                sparkLeft = 10,
+                sparkSize = 4,
+                sparkSizeDecay = 0.98,  
+                sparkGravity = 1.05, 
+
+            angle, distance,
+            firstSpark = null,
+            lastSpark, spark,
+
+            body = document.body,
+            documentElement = document.documentElement,
+
+            colors = ['rgba(255,255,255,1)','rgba(255,69,0,1)','rgba(255,105,180,1)','rgba(0,191,255,1)','rgba(255,215,0,1)'], 
+            colorCount = colors.length,
+
+            canvas = document.getElementById("hanabi"),
+            context, canvasWidth, canvasHeight,
+
+            canvasWidth = canvas.width = Math.max(body.clientWidth, body.scrollWidth, documentElement.scrollWidth, documentElement.clientWidth);
+            canvasHeight = canvas.height = Math.max(body.clientHeight, body.scrollHeight, documentElement.scrollHeight, documentElement.clientHeight);
+            context = canvas.getContext("2d");
+
+            sparkTop = 120;
+            sparkLeft = canvasWidth / 2;
+
+            requestAnimationFrame = (function() {
+                return window.requestAnimationFrame ||
+                window.webkitRequestAnimationFrame  ||
+                window.mozRequestAnimationFrame     ||
+                window.oRequestAnimationFrame       ||
+                window.msRequestAnimationFrame      ||
+                function(callback, element) {
+                    window.setTimeout(callback, 1000 / 60);
+                };
+            })();
+
+            function Spark() {
+                this.initialize.apply(this, arguments);
+            }
+
+            Spark.prototype = {
+                initialize: function(x, y) {
+                    this.x = x;
+                    this.y = y;
+                },
+                x: 0, y: 0, vx: 0, vy: 0, size: 0, next: null
+            };
+
+            for (j = 0; j < 4; j++) {
+                sparkLeft += Math.random() * 300 - 150;
+                sparkTop += Math.random() * 100 - 50;
+
+                for (i = 0; i < sparkCount; i++) {
+                    angle = Math.Radian / 1.5 * Math.random() - 0.5;
+                    distance = Math.random() * sparkSpeed + sparkSpeed;
+                    spark = new Spark(sparkLeft, sparkTop);
+
+                    spark.vx = Math.cos(angle) * distance;
+                    spark.vy = Math.sin(angle) * distance;
+                    spark.size = sparkSize;
+
+                    if (firstSpark === null) {
+                        firstSpark = lastSpark = spark;
+                    } else {
+                        lastSpark.next = spark;
+                        lastSpark = spark;
+                    }
+                }
+            }
+
+            context.fillStyle = "rgba(0,0,0,0.1)";
+            context.lineWidth = 1;
+
+            function animationLoop() {
+                var currentSpark = firstSpark;
+                context.fillStyle = "rgba(0,0,0,0.04)";
+                context.fillRect(0,0,canvasWidth,canvasHeight);
+
+                do {
+                    if (currentSpark.size < 0.1) continue;
+                    context.lineWidth = currentSpark.size;
+                    context.strokeStyle = colors[Math.floor(Math.random() * colorCount)];
+                    context.beginPath();
+                    context.moveTo(currentSpark.x, currentSpark.y);
+
+                    currentSpark.x += currentSpark.vx;
+                    currentSpark.y = (currentSpark.y * sparkGravity + currentSpark.vy);
+
+                    context.lineTo(currentSpark.x, currentSpark.y);
+                    context.stroke();
+
+                    currentSpark.size *= sparkSizeDecay;
+                    if (currentSpark.x < 0 || currentSpark.x > canvasWidth || currentSpark.y < 0 || currentSpark.y > canvasHeight) continue;
+
+                } while(currentSpark = currentSpark.next);
+
+                requestAnimationFrame(animationLoop);
+            }
+
+            animationLoop();
+        }
+
+        setInterval(shower, 3000); // استدعاء الألعاب النارية كل 3 ثواني
+
+        function toggleAudio() {
+            var audio = document.getElementById('audio-player');
+            if (audio.paused) {
+                audio.play();
+            } else {
+                audio.pause();
+            }
+        }
+    </script>
+</body>
+</html>
